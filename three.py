@@ -1,9 +1,9 @@
 import re
 
-pattern = r"(?i)mul\((\d{1,3}),(\d{1,3})\)"
+MUL_COMMAND_PATTERN = re.compile(r"(?i)mul\((\d{1,3}),(\d{1,3})\)")
 
 def extract_mul_command_input(input_string):
-    matches = re.findall(pattern, input_string)
+    matches = MUL_COMMAND_PATTERN.findall(input_string)
     return [(int(num1), int(num2)) for num1, num2 in matches]
 
 def decorrupt_memory(memory_filepath):
