@@ -1,5 +1,6 @@
 from twenty_twentyfour.four import count_word_in_grid, count_x_mas
 from twenty_twentyfour.five import valid_updates, invalid_updates
+from twenty_twentyfour.six import count_guard_positions
 
 def test_four_first_example():
     example = ('MMMSXXMASM',
@@ -54,3 +55,22 @@ def test_five_second(data_dir):
         updates = [line.strip().split(',') for line in f]
 
     assert invalid_updates(updates, restricted_pages) == 4130
+
+def test_six_example():
+    example = ('....#.....',
+        '.........#',
+        '..........',
+        '..#.......',
+        '.......#..',
+        '..........',
+        '.#..^.....',
+        '........#.',
+        '#.........',
+        '......#...',
+    )
+    assert count_guard_positions(example) == 41
+
+def test_six_first(data_dir):
+    with open(data_dir / 'six.txt') as f:
+        source = f.readlines()
+    assert count_guard_positions(source) == 4722
