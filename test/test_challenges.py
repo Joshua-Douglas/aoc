@@ -1,5 +1,5 @@
 from twenty_twentyfour.four import count_word_in_grid, count_x_mas
-from twenty_twentyfour.five import valid_updates
+from twenty_twentyfour.five import valid_updates, invalid_updates
 
 def test_four_first_example():
     example = ('MMMSXXMASM',
@@ -36,4 +36,21 @@ def test_five_first(data_dir):
             restricted_pages[before] = restrictions
         
         updates = [line.strip().split(',') for line in f]
-    assert valid_updates(restricted_pages, updates) == 5762
+    assert valid_updates(updates, restricted_pages) == 5762
+
+
+def test_five_second(data_dir):
+    with open(data_dir / 'five.txt') as f:
+        restricted_pages = dict()
+        for line in f:
+            if line.startswith('\n'):
+                break
+            before, after = line.strip().split('|')
+            before, after = before, after
+            restrictions = restricted_pages.get(before, list())
+            restrictions.append(after)
+            restricted_pages[before] = restrictions
+        
+        updates = [line.strip().split(',') for line in f]
+
+    assert invalid_updates(updates, restricted_pages) == 4130
