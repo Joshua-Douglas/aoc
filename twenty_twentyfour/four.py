@@ -22,3 +22,24 @@ def count_word_in_grid(word: str, grid_source: Iterable[str]) -> int:
             else:
                 result += 1
     return result
+
+def count_x_mas(grid_source: Iterable[str]) -> int:    
+    grid = CharGrid(grid_source)
+    result = 0
+
+    for x, y in product(range(grid.width), range(grid.height)):
+        if grid[x,y] != 'A':
+            continue
+
+        nw = grid.step((x,y), Direction.NORTHWEST)
+        se = grid.step((x,y), Direction.SOUTHEAST)
+        if nw == se or any(step not in ('M','S') for step in (nw, se)):
+            continue
+
+        ne = grid.step((x,y), Direction.NORTHEAST)
+        sw = grid.step((x,y), Direction.SOUTHWEST)
+        if ne == sw or any(step not in ('M','S') for step in (ne, sw)):
+            continue
+
+        result += 1
+    return result
