@@ -24,6 +24,7 @@ class CharGrid:
         self.width = 0
         self._grid = array('u')
         for line in source:
+            line = line.strip()
             if (self.width > 0) and (self.width != len(line)):
                 raise ValueError(f"Different size grid widths found {self.width} & {len(line)}")
             self.width = len(line)

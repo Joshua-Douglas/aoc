@@ -4,6 +4,7 @@ from twenty_twentyfour.four import count_word_in_grid, count_x_mas
 from twenty_twentyfour.five import valid_updates, invalid_updates
 from twenty_twentyfour.six import count_guard_positions, guard_is_in_loop, count_guard_loops
 from twenty_twentyfour.seven import get_calibrations, sum_valid_calibrations, get_elephant_operators, concat
+from twenty_twentyfour.eight import calc_antinodes, count_antinodes
 
 from twenty_twentyfour.datatypes import CharGrid, Direction
 
@@ -124,3 +125,22 @@ def test_seven_example_second(data_dir):
 def test_seven_second(data_dir):
     calibrations = get_calibrations(data_dir / 'seven.txt')
     assert sum_valid_calibrations(calibrations, get_elephant_operators()) == 254136560217241
+
+@pytest.mark.parametrize("antenna1, antenna2, antinode1, antinode2", [
+    ((4,3), (5,5), (3,1), (6,7)),
+    ((5,5), (8,4), (2,6), (11,3))
+])
+def test_antinode_calc(antenna1, antenna2, antinode1, antinode2):
+    actual_antinodes = calc_antinodes(antenna1, antenna2)
+    assert antinode1 in actual_antinodes
+    assert antinode2 in actual_antinodes
+
+def test_eight_example(data_dir):
+    with open(data_dir / 'eight_example.txt') as f:
+        source = f.readlines()
+    assert count_antinodes(source) == 14
+    
+def test_eight_first(data_dir):
+    with open(data_dir / 'eight.txt') as f:
+        source = f.readlines()
+    assert count_antinodes(source) == 293
