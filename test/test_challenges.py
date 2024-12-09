@@ -4,7 +4,7 @@ from twenty_twentyfour.four import count_word_in_grid, count_x_mas
 from twenty_twentyfour.five import valid_updates, invalid_updates
 from twenty_twentyfour.six import count_guard_positions, guard_is_in_loop, count_guard_loops
 from twenty_twentyfour.seven import get_calibrations, sum_valid_calibrations, get_elephant_operators, concat
-from twenty_twentyfour.eight import calc_antinodes, count_antinodes
+from twenty_twentyfour.eight import calc_antinodes, count_antinodes, count_harmonic_antinodes
 
 from twenty_twentyfour.datatypes import CharGrid, Direction
 
@@ -144,3 +144,13 @@ def test_eight_first(data_dir):
     with open(data_dir / 'eight.txt') as f:
         source = f.readlines()
     assert count_antinodes(source) == 293
+
+def test_eight_example_harmonic(data_dir):
+    with open(data_dir / 'eight_example.txt') as f:
+        source = f.readlines()
+    assert count_harmonic_antinodes(source) == 34
+
+def test_eight_example_harmonic(data_dir):
+    with open(data_dir / 'eight.txt') as f:
+        source = f.readlines()
+    assert count_harmonic_antinodes(source) == 934

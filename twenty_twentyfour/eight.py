@@ -25,3 +25,27 @@ def count_antinodes(source: Iterable[str]):
             if grid.inbound(*n1): result.add(n1)
             if grid.inbound(*n2): result.add(n2)
     return len(result)
+
+def count_harmonic_antinodes(source: Iterable[str]):
+    grid = CharGrid(source)
+    antennas = dict()
+    for x, y in product(range(grid.width), range(grid.height)):
+        grid_value = grid[x,y]
+        if grid_value != '.':
+            antenna_positions = antennas.get(grid_value, list())
+            antenna_positions.append((x,y))
+            antennas[grid_value] = antenna_positions
+
+    result = set()
+    for _, antenna_positions in antennas.items():
+        for first, second in combinations(antenna_positions, 2):
+            (x1, y1), (x2, y2) = first, second
+            diffx, diffy = x1 - x2, y1 - y2
+
+            for direction in (1, -1):
+                curpos = first
+                dx, dy = direction * diffx, direction * diffy
+                while grid.inbound(*curpos):
+                    result.add(curpos)
+                    curpos = curpos[0] + dx, curpos[1] + dy
+    return len(result)
