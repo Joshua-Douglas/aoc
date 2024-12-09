@@ -3,6 +3,8 @@ import pytest
 from twenty_twentyfour.four import count_word_in_grid, count_x_mas
 from twenty_twentyfour.five import valid_updates, invalid_updates
 from twenty_twentyfour.six import count_guard_positions, guard_is_in_loop, count_guard_loops
+from twenty_twentyfour.seven import get_calibrations, sum_valid_calibrations, get_elephant_operators, concat
+
 from twenty_twentyfour.datatypes import CharGrid, Direction
 
 def test_four_first_example():
@@ -95,3 +97,30 @@ def test_six_second(data_dir):
     with open(data_dir / 'six.txt') as f:
         source = f.readlines()
     assert count_guard_loops(source) == 1602
+
+def test_seven_example(data_dir):
+    calibrations = get_calibrations(data_dir / 'seven_example.txt')
+    assert sum_valid_calibrations(calibrations) == 3749
+
+def test_seven(data_dir):
+    calibrations = get_calibrations(data_dir / 'seven.txt')
+    assert sum_valid_calibrations(calibrations) == 1038838357795
+
+@pytest.mark.parametrize("a, b, expected", [
+    (12, 34, 1234), 
+    (5, 7, 57), 
+    (0, 123, 123), 
+    (-12, 34, 1234), 
+    (-5, -7, 57), 
+    (100, 200, 100200),
+])
+def test_concat(a, b, expected):
+    assert concat(a, b) == expected
+
+def test_seven_example_second(data_dir):
+    calibrations = get_calibrations(data_dir / 'seven_example.txt')
+    assert sum_valid_calibrations(calibrations, get_elephant_operators()) == 11387
+
+def test_seven_second(data_dir):
+    calibrations = get_calibrations(data_dir / 'seven.txt')
+    assert sum_valid_calibrations(calibrations, get_elephant_operators()) == 254136560217241
