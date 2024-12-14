@@ -5,6 +5,7 @@ from twenty_twentyfour.five import valid_updates, invalid_updates
 from twenty_twentyfour.six import count_guard_positions, guard_is_in_loop, count_guard_loops
 from twenty_twentyfour.seven import get_calibrations, sum_valid_calibrations, get_elephant_operators, concat
 from twenty_twentyfour.eight import calc_antinodes, count_antinodes, count_harmonic_antinodes
+from twenty_twentyfour.nine import assign_file_ids, noncontinguous_defrag, disk_checksum
 
 from twenty_twentyfour.datatypes import CharGrid, Direction
 
@@ -154,3 +155,64 @@ def test_eight_example_harmonic(data_dir):
     with open(data_dir / 'eight.txt') as f:
         source = f.readlines()
     assert count_harmonic_antinodes(source) == 934
+
+def test_nine_assign_file_ids_odd_len():
+    example_input = '2333133121414131402'    
+    assert assign_file_ids(example_input) == [
+        (0,2,3),
+        (1,3,3),
+        (2,1,3),
+        (3,3,1),
+        (4,2,1),
+        (5,4,1),
+        (6,4,1),
+        (7,3,1),
+        (8,4,0),
+        (9,2,0)
+    ]
+def test_nine_assign_file_ids_even_len():
+    example_input = '23331331214141314023'    
+    assert assign_file_ids(example_input) == [
+        (0,2,3),
+        (1,3,3),
+        (2,1,3),
+        (3,3,1),
+        (4,2,1),
+        (5,4,1),
+        (6,4,1),
+        (7,3,1),
+        (8,4,0),
+        (9,2,3)
+    ]
+
+def test_nine_noncontinguous_defrag():
+    example_input = '2333133121414131402'
+    indexed_input = assign_file_ids(example_input)
+    assert noncontinguous_defrag(indexed_input) == [
+        (0,2,0),
+        (9,2,0),
+        (8,1,0),
+        (1,3,0),
+        (8,3,0),
+        (2,1,0),
+        (7,3,0),
+        (3,3,0),
+        (6,1,0),
+        (4,2,0),
+        (6,1,0),
+        (5,4,0),
+        (6,2,14)
+    ]
+
+def test_nine_example_first():
+    example_input = '2333133121414131402'
+    indexed_input = assign_file_ids(example_input)
+    defraged_map = noncontinguous_defrag(indexed_input)
+    assert disk_checksum(defraged_map) == 1928
+
+def test_nine_first(data_dir):
+    with open(data_dir / 'nine.txt') as f:
+        input = f.readline()
+    indexed_input = assign_file_ids(input)
+    defraged_map = noncontinguous_defrag(indexed_input)
+    assert disk_checksum(defraged_map) == 6344673854800
