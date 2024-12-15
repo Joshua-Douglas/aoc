@@ -5,7 +5,8 @@ from twenty_twentyfour.five import valid_updates, invalid_updates
 from twenty_twentyfour.six import count_guard_positions, guard_is_in_loop, count_guard_loops
 from twenty_twentyfour.seven import get_calibrations, sum_valid_calibrations, get_elephant_operators, concat
 from twenty_twentyfour.eight import calc_antinodes, count_antinodes, count_harmonic_antinodes
-from twenty_twentyfour.nine import assign_file_ids, noncontinguous_defrag, disk_checksum, contiguous_defrag, part_two
+from twenty_twentyfour.nine import assign_file_ids, noncontinguous_defrag, disk_checksum, contiguous_defrag
+from twenty_twentyfour.ten import search, count_paths
 
 from twenty_twentyfour.datatypes import CharGrid, Direction
 
@@ -251,3 +252,87 @@ def test_nine_second(data_dir):
     indexed_input = assign_file_ids(input)
     defraged_map = contiguous_defrag(indexed_input)    
     assert disk_checksum(defraged_map) == 6360363199987
+
+def test_ten_example_first_small():
+    source_str = (
+        '0123',
+        '1234',
+        '8765',
+        '9876',
+    )
+    assert count_paths(source_str) == 1
+
+def test_ten_example_first_medium():
+    source_str = (
+        '89010123',
+        '78121874',
+        '87430965',
+        '96549874',
+        '45678903',
+        '32019012',
+        '01329801',
+        '10456732'
+    )
+    assert count_paths(source_str) == 36
+
+@pytest.mark.parametrize('start, count', [
+    ((2,0), 5),
+    ((4,0), 6),
+    ((4,2), 5),
+    ((6,4), 3),
+    ((2,5), 1),
+    ((5,5), 3),
+    ((0,6), 5),
+    ((6,6), 3),
+    ((1,7), 5)
+])
+def test_ten_search(start, count):
+    source_str = (
+        '89010123',
+        '78121874',
+        '87430965',
+        '96549874',
+        '45678903',
+        '32019012',
+        '01329801',
+        '10456732'
+    )
+    g = CharGrid(source_str)
+    assert search(g, start) == count
+
+
+@pytest.mark.parametrize('start, count', [
+    ((2,0), 20),
+    ((4,0), 24),
+    ((4,2), 10),
+    ((6,4), 4),
+    ((2,5), 1),
+    ((5,5), 4),
+    ((0,6), 5),
+    ((6,6), 8),
+    ((1,7), 5)
+])
+def test_ten_distinct(start, count):
+    source_str = (
+        '89010123',
+        '78121874',
+        '87430965',
+        '96549874',
+        '45678903',
+        '32019012',
+        '01329801',
+        '10456732'
+    )
+    g = CharGrid(source_str)
+    assert search(g, start, True) == count
+
+
+def test_ten_first(data_dir):
+    with open(data_dir / 'ten.txt') as f:
+        source = f.readlines()
+    assert count_paths(source) == 822
+
+def test_ten_second(data_dir):
+    with open(data_dir / 'ten.txt') as f:
+        source = f.readlines()
+    assert count_paths(source, include_distinct_paths=True) == 1801
