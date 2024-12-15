@@ -7,6 +7,7 @@ from twenty_twentyfour.seven import get_calibrations, sum_valid_calibrations, ge
 from twenty_twentyfour.eight import calc_antinodes, count_antinodes, count_harmonic_antinodes
 from twenty_twentyfour.nine import assign_file_ids, noncontinguous_defrag, disk_checksum, contiguous_defrag
 from twenty_twentyfour.ten import search, count_paths
+from twenty_twentyfour.eleven import blink_stones, stones_after_blink
 
 from twenty_twentyfour.datatypes import CharGrid, Direction
 
@@ -336,3 +337,26 @@ def test_ten_second(data_dir):
     with open(data_dir / 'ten.txt') as f:
         source = f.readlines()
     assert count_paths(source, include_distinct_paths=True) == 1801
+
+@pytest.mark.parametrize('orig, new', [
+    (['125', '17'], ['253000', '1', '7']),
+    (['253000', '1', '7'], ['253','0','2024','14168']),
+    (['253','0','2024','14168'], ['512072', '1', '20', '24', '28676032']),
+    (['512072', '1', '20', '24', '28676032'], ['512', '72', '2024', '2', '0', '2', '4', '2867', '6032']),
+    (['512', '72', '2024', '2', '0', '2', '4', '2867', '6032'], ['1036288', '7', '2', '20', '24', '4048', '1', '4048', '8096', '28', '67', '60', '32']),
+    (['1036288', '7', '2', '20', '24', '4048', '1', '4048', '8096', '28', '67', '60', '32'], ['2097446912', '14168', '4048', '2', '0', '2', '4', '40', '48', '2024', '40', '48', '80', '96', '2', '8', '6', '7', '6', '0', '3', '2'])
+])
+def test_eleven_blink(orig, new):
+    assert blink_stones(orig) == new
+
+def test_eleven_blink_count():
+    assert stones_after_blink(['125', '17'], 6) == 22
+    assert stones_after_blink(['125', '17'], 25) == 55312
+
+def test_eleven_part_one():
+    input = ['554735', '45401', '8434', '0', '188', '7487525', '77', '7']
+    assert stones_after_blink(input, 25, maintain_order=False) == 209412
+
+#def test_eleven_part_two():
+#    input = ['554735', '45401', '8434', '0', '188', '7487525', '77', '7']
+#    assert stones_after_blink(input, 75) == 209412
