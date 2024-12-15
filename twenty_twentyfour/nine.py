@@ -1,6 +1,4 @@
 from typing import List, Tuple
-import math
-from itertools import batched
 
 def noncontinguous_defrag(disk_map: List[Tuple[int, int, int]]) -> str:
     '''
@@ -39,31 +37,42 @@ def noncontinguous_defrag(disk_map: List[Tuple[int, int, int]]) -> str:
     result[-1] = result[-1][0], result[-1][1], empty_block_count
     return result
 
-def disk_checksum_old(disk_map: Tuple[int,int,int]):
-    result = 0
-    memory_id = 0
-    for file_id, file_size, _ in disk_map:
-        for i in range(file_size):
-            result += file_id * memory_id
-            memory_id += 1
-    return result
+def contiguous_defrag(disk_map: List[Tuple[int, int, int]]) -> List[Tuple[int, int, int]]:
+    """
+    Defragment the disk map by moving file blocks from the right into empty spaces on the left,
+    only if the file block completely fits into the empty space.
+    """
+    r_idx = len(disk_map) - 1
+    defrag_start_idx  = 0
+    while r_idx >= 0:
+        r_file_id, r_file_size, r_empty = disk_map[r_idx]
+        all_left_blocks_defragged = False
+        for l_idx in range(defrag_start_idx, r_idx):
+            l_file_id, l_file_size, l_empty = disk_map[l_idx]
 
-def disk_checksum_nodiv(disk_map: Tuple[int,int,int]):
-    result = 0
-    memory_id = 0
-    for file_id, file_size, _ in disk_map:
-        result += sum(file_id * m_id for m_id in range(memory_id, memory_id+file_size))
-        memory_id += file_size
-    return result
+            all_left_blocks_defragged = all_left_blocks_defragged and (l_empty == 0)
+            if all_left_blocks_defragged:
+                defrag_start_idx = l_idx
+            
+            if (r_file_size <= l_empty):
+                disk_map[l_idx] = l_file_id, l_file_size, 0
+                del disk_map[r_idx]
+                disk_map.insert(l_idx+1, (r_file_id, r_file_size, l_empty - r_file_size)) 
+                prev_id, prev_size, prev_empty = disk_map[r_idx]
+                disk_map[r_idx] = prev_id, prev_size, prev_empty + r_file_size + r_empty
+                break
+        else:
+            r_idx -= 1
+    return disk_map
 
 def disk_checksum(disk_map: Tuple[int, int, int]) -> int:
     result = 0
     memory_id = 0
-    for file_id, file_size, _ in disk_map:
+    for file_id, file_size, empty_size in disk_map:
         # Sum of memory IDs for the current file
         memory_sum = file_size * memory_id + file_size * (file_size - 1) // 2
         result += file_id * memory_sum
-        memory_id += file_size
+        memory_id += file_size + empty_size
     return result
 
 def assign_file_ids(disk_map) -> List[Tuple[int,int,int]]:
@@ -80,6 +89,6 @@ def assign_file_ids(disk_map) -> List[Tuple[int,int,int]]:
         file_size = disk_map[idx]
         empty_blocks = disk_map[idx + 1]
         result.append((id, int(file_size), int(empty_blocks)))
-    if len(result) % 2 != 0:
+    if len(disk_map) % 2 != 0:
         result.append(((id+1), int(disk_map[-1]), 0))
     return result
