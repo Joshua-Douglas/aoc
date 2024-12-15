@@ -7,7 +7,7 @@ from twenty_twentyfour.seven import get_calibrations, sum_valid_calibrations, ge
 from twenty_twentyfour.eight import calc_antinodes, count_antinodes, count_harmonic_antinodes
 from twenty_twentyfour.nine import assign_file_ids, noncontinguous_defrag, disk_checksum, contiguous_defrag
 from twenty_twentyfour.ten import search, count_paths
-from twenty_twentyfour.eleven import blink_stones, stones_after_blink
+from twenty_twentyfour.eleven import blink_stones, stones_after_blink, stones_count_after_blink
 
 from twenty_twentyfour.datatypes import CharGrid, Direction
 
@@ -355,8 +355,9 @@ def test_eleven_blink_count():
 
 def test_eleven_part_one():
     input = ['554735', '45401', '8434', '0', '188', '7487525', '77', '7']
-    assert stones_after_blink(input, 25, maintain_order=False) == 209412
+    # assert stones_after_blink(input, 25, maintain_order=False) == 209412
+    assert stones_count_after_blink(input, 25) == 209412
 
-#def test_eleven_part_two():
-#    input = ['554735', '45401', '8434', '0', '188', '7487525', '77', '7']
-#    assert stones_after_blink(input, 75) == 209412
+def test_eleven_part_two():
+    input = ['554735', '45401', '8434', '0', '188', '7487525', '77', '7']
+    assert stones_count_after_blink(input, 75) == 248967696501656

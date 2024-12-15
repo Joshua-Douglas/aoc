@@ -31,6 +31,31 @@ def blink_stones(stones: List[str], maintain_order = True) -> List[str]:
                 stones.append(new_right)
     return stones
 
+stone_count_memo = dict()
+
+def stone_count_after_blink(stone: str, blinks: int) -> int:
+    global stone_count_memo
+    if (stone,blinks) in stone_count_memo:
+        return stone_count_memo[(stone, blinks)]
+
+    left_stone, right_stone = blink_stone(stone)
+
+    if (blinks == 1) and right_stone:
+        return 2
+    elif blinks == 1:
+        return 1
+    
+    left_count = stone_count_after_blink(left_stone, blinks-1)
+    right_count = stone_count_after_blink(right_stone, blinks-1) if right_stone else 0
+    stone_count_memo[(stone, blinks)] = left_count+right_count
+    return left_count + right_count
+
+def stones_count_after_blink(stones: List[str], blinks:int) -> int:
+    result = 0
+    for stone in stones:
+        result += stone_count_after_blink(stone, blinks)
+    return result
+
 def stones_after_blink(stones: List[str], blinks: int, maintain_order: bool = False) -> int:
     for _ in range(blinks):
         stones = blink_stones(stones, maintain_order)
