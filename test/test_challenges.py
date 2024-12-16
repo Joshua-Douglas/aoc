@@ -8,6 +8,7 @@ from twenty_twentyfour.eight import calc_antinodes, count_antinodes, count_harmo
 from twenty_twentyfour.nine import assign_file_ids, noncontinguous_defrag, disk_checksum, contiguous_defrag
 from twenty_twentyfour.ten import search, count_paths
 from twenty_twentyfour.eleven import blink_stones, stones_after_blink, stones_count_after_blink
+from twenty_twentyfour.twelve import calc_plot_dimensions, calc_fencing_cost
 
 from twenty_twentyfour.datatypes import CharGrid, Direction
 
@@ -361,3 +362,68 @@ def test_eleven_part_one():
 def test_eleven_part_two():
     input = ['554735', '45401', '8434', '0', '188', '7487525', '77', '7']
     assert stones_count_after_blink(input, 75) == 248967696501656
+
+@pytest.mark.parametrize('start_pos, area, perimeter', [
+    ((0,0), 4, 10),((1,0), 4, 10),((2,0), 4, 10),((3,0), 4, 10), #A A A A
+    ((0,1), 4, 8), ((1,1), 4, 8), ((2,1), 4, 10), ((3,1), 1, 4), #B B C D
+    ((0,2), 4, 8), ((1,2), 4, 8), ((2,2), 4, 10),((3,2), 4, 10), #B B C C
+    ((0,3), 3, 8), ((1,3), 3, 8), ((2,3), 3, 8), ((3,3), 4, 10), #E E E C
+])
+def test_twelve_dim_calc_simple(start_pos, area, perimeter):
+    source_str = (
+        'AAAA',
+        'BBCD',
+        'BBCC',
+        'EEEC'
+    )
+    g = CharGrid(source_str)
+    assert calc_plot_dimensions(g, start_pos) == (area, perimeter)
+
+@pytest.mark.parametrize('start_pos, area, perimeter', [
+    ((0,0), 12, 18), #R
+    ((4,0), 4, 8),   #I
+    ((6,0), 14, 28), #C
+    ((8,0), 10, 18), #F
+    ((0,3), 13, 20), #V
+    ((6,3), 11, 20), #J
+    ((3,3), 14, 28), #C
+    ((9,9), 13, 18), #E
+    ((1,8), 14, 22), #I
+    ((0,8), 5, 12),  #M
+    ((5,9), 3, 8)    #S
+])
+def test_twelve_dim_calc_example(start_pos, area, perimeter):
+    source_str = (
+        'RRRRIICCFF',
+        'RRRRIICCCF',
+        'VVRRRCCFFF',
+        'VVRCCCJFFF',
+        'VVVVCJJCFE',
+        'VVIVCCJJEE',
+        'VVIIICJJEE',
+        'MIIIIIJJEE',
+        'MIIISIJEEE',
+        'MMMISSJEEE'
+    )
+    g = CharGrid(source_str)
+    assert calc_plot_dimensions(g, start_pos) == (area, perimeter)
+
+def test_twelve_example_cost(data_dir):
+    source_str = (
+        'RRRRIICCFF',
+        'RRRRIICCCF',
+        'VVRRRCCFFF',
+        'VVRCCCJFFF',
+        'VVVVCJJCFE',
+        'VVIVCCJJEE',
+        'VVIIICJJEE',
+        'MIIIIIJJEE',
+        'MIIISIJEEE',
+        'MMMISSJEEE'
+    )
+    assert calc_fencing_cost(source_str) == 1930
+
+def test_twelve_part1_cost(data_dir):
+    with open(data_dir / 'twelve.txt') as f:
+        source = f.readlines()
+    assert calc_fencing_cost(source) == 1549354
