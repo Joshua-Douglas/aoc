@@ -9,6 +9,7 @@ from twenty_twentyfour.nine import assign_file_ids, noncontinguous_defrag, disk_
 from twenty_twentyfour.ten import search, count_paths
 from twenty_twentyfour.eleven import blink_stones, stones_after_blink, stones_count_after_blink
 from twenty_twentyfour.twelve import calc_plot_dimensions, calc_fencing_cost
+from twenty_twentyfour.thirtheen import solve_linear_system_integer_solutions, find_token_cost
 
 from twenty_twentyfour.datatypes import CharGrid, Direction
 
@@ -460,3 +461,21 @@ def test_twelve_part2_cost(data_dir):
     with open(data_dir / 'twelve.txt') as f:
         source = f.readlines()
     assert calc_fencing_cost(source, True) == 937032
+
+@pytest.mark.parametrize('a1, b1, c1, a2, b2, c2, solution', [
+    (94, 22, 8400, 34, 67, 5400, (80, 40)),
+    (26, 67, 12748, 66, 21, 12176, None),
+    (17, 84, 7870, 86, 37, 6450, (38, 86)),
+    (69, 27, 18641, 23, 71, 10279, None),
+])
+def test_thirteen_linear(a1, b1, c1, a2, b2, c2, solution):
+    assert solve_linear_system_integer_solutions(a1, b1, c1, a2, b2, c2) == solution
+
+def test_thirteen_example_part_one(data_dir):
+    assert find_token_cost(data_dir / 'thirteen_example.txt') == 480
+
+def test_thirteen_part_one(data_dir):
+    assert find_token_cost(data_dir / 'thirteen.txt') == 31589
+
+def test_thirteen_part_two(data_dir):
+    assert find_token_cost(data_dir / 'thirteen.txt', 10000000000000) == 480
