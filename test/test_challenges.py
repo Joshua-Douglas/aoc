@@ -363,13 +363,13 @@ def test_eleven_part_two():
     input = ['554735', '45401', '8434', '0', '188', '7487525', '77', '7']
     assert stones_count_after_blink(input, 75) == 248967696501656
 
-@pytest.mark.parametrize('start_pos, area, perimeter', [
-    ((0,0), 4, 10),((1,0), 4, 10),((2,0), 4, 10),((3,0), 4, 10), #A A A A
-    ((0,1), 4, 8), ((1,1), 4, 8), ((2,1), 4, 10), ((3,1), 1, 4), #B B C D
-    ((0,2), 4, 8), ((1,2), 4, 8), ((2,2), 4, 10),((3,2), 4, 10), #B B C C
-    ((0,3), 3, 8), ((1,3), 3, 8), ((2,3), 3, 8), ((3,3), 4, 10), #E E E C
+@pytest.mark.parametrize('start_pos, area, perimeter, sides', [
+    ((0,0), 4, 10, 4),((1,0), 4, 10, 4),((2,0), 4, 10, 4),((3,0), 4, 10, 4), #A A A A
+    ((0,1), 4, 8, 4), ((1,1), 4, 8, 4), ((2,1), 4, 10, 8), ((3,1), 1, 4, 4), #B B C D
+    ((0,2), 4, 8, 4), ((1,2), 4, 8, 4), ((2,2), 4, 10, 8),((3,2), 4, 10, 8), #B B C C
+    ((0,3), 3, 8, 4), ((1,3), 3, 8, 4), ((2,3), 3, 8, 4), ((3,3), 4, 10, 8), #E E E C
 ])
-def test_twelve_dim_calc_simple(start_pos, area, perimeter):
+def test_twelve_dim_calc_simple(start_pos, area, perimeter, sides):
     source_str = (
         'AAAA',
         'BBCD',
@@ -377,22 +377,22 @@ def test_twelve_dim_calc_simple(start_pos, area, perimeter):
         'EEEC'
     )
     g = CharGrid(source_str)
-    assert calc_plot_dimensions(g, start_pos) == (area, perimeter)
+    assert calc_plot_dimensions(g, start_pos) == (area, perimeter, sides)
 
-@pytest.mark.parametrize('start_pos, area, perimeter', [
-    ((0,0), 12, 18), #R
-    ((4,0), 4, 8),   #I
-    ((6,0), 14, 28), #C
-    ((8,0), 10, 18), #F
-    ((0,3), 13, 20), #V
-    ((6,3), 11, 20), #J
-    ((3,3), 14, 28), #C
-    ((9,9), 13, 18), #E
-    ((1,8), 14, 22), #I
-    ((0,8), 5, 12),  #M
-    ((5,9), 3, 8)    #S
+@pytest.mark.parametrize('start_pos, area, perimeter, sides', [
+    ((0,0), 12, 18, 10), #R
+    ((4,0), 4, 8, 4),   #I
+    ((6,0), 14, 28, 22), #C
+    ((8,0), 10, 18, 12), #F
+    ((0,3), 13, 20, 10), #V
+    ((6,3), 11, 20, 12), #J
+    ((7,4), 1, 4, 4), #C
+    ((9,9), 13, 18, 8), #E
+    ((1,8), 14, 22, 16), #I
+    ((0,8), 5, 12, 6),  #M
+    ((5,9), 3, 8, 6)    #S
 ])
-def test_twelve_dim_calc_example(start_pos, area, perimeter):
+def test_twelve_dim_calc_example(start_pos, area, perimeter, sides):
     source_str = (
         'RRRRIICCFF',
         'RRRRIICCCF',
@@ -406,9 +406,9 @@ def test_twelve_dim_calc_example(start_pos, area, perimeter):
         'MMMISSJEEE'
     )
     g = CharGrid(source_str)
-    assert calc_plot_dimensions(g, start_pos) == (area, perimeter)
+    assert calc_plot_dimensions(g, start_pos) == (area, perimeter, sides)
 
-def test_twelve_example_cost(data_dir):
+def test_twelve_example_cost():
     source_str = (
         'RRRRIICCFF',
         'RRRRIICCCF',
@@ -422,8 +422,41 @@ def test_twelve_example_cost(data_dir):
         'MMMISSJEEE'
     )
     assert calc_fencing_cost(source_str) == 1930
+    assert calc_fencing_cost(source_str, True) == 1206
+
+def test_twelve_complex_examples():
+    source_str = (
+        'EEEEE',
+        'EXXXX',
+        'EEEEE',
+        'EXXXX',
+        'EEEEE'
+    )
+    second_source = (
+        'AAAAAA',
+        'AAABBA',
+        'AAABBA',
+        'ABBAAA',
+        'ABBAAA',
+        'AAAAAA'
+    )
+    g = CharGrid(source_str)
+    second_g = CharGrid(second_source)
+    assert calc_plot_dimensions(g, (0,0)) == (17, 36, 12)
+    assert calc_plot_dimensions(g, (1,1)) == (4, 10, 4)
+    assert calc_plot_dimensions(g, (1,3)) == (4, 10, 4)
+    #assert calc_plot_dimensions(second_g, (0,0)) == (17, 36, 12)
+    #assert calc_plot_dimensions(second_g, (1,1)) == (4, 10, 4)
+    #assert calc_plot_dimensions(second_g, (1,3)) == (4, 10, 4)
+    assert calc_fencing_cost(source_str, True) == 236
+    assert calc_fencing_cost(second_source, True) == 368
 
 def test_twelve_part1_cost(data_dir):
     with open(data_dir / 'twelve.txt') as f:
         source = f.readlines()
     assert calc_fencing_cost(source) == 1549354
+
+def test_twelve_part2_cost(data_dir):
+    with open(data_dir / 'twelve.txt') as f:
+        source = f.readlines()
+    assert calc_fencing_cost(source, True) == 937032
