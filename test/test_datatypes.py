@@ -108,6 +108,48 @@ def test_step(x, y, direction, steps, expected):
     g = CharGrid(FOUR_BY_THREE_GRID)
     assert g.step((x,y), direction, steps) == expected
 
+@pytest.mark.parametrize("x,y,direction,steps,expected", [
+    (1, 1, Direction.NORTHWEST, 0, 'f'),
+    (1, 1, Direction.NORTHWEST, 1, 'a'),
+    (1, 1, Direction.NORTH, 1, 'b'),
+    (1, 1, Direction.NORTHEAST, 1, 'c'),
+    (1, 1, Direction.WEST, 1, 'e'),
+    (1, 1, Direction.EAST, 1, 'g'),
+    (1, 1, Direction.SOUTHWEST, 1, 'i'),
+    (1, 1, Direction.SOUTH, 1, 'j'),
+    (1, 1, Direction.SOUTHEAST, 1, 'k'),
+    (1, 1, Direction.NORTHWEST, 2, 'l'), #f -> NORTHEAST -> a
+    (1, 1, Direction.NORTH, 2, 'j'),
+    (1, 1, Direction.NORTHEAST, 2, 'l'),
+    (1, 1, Direction.WEST, 2, 'h'),
+    (1, 1, Direction.EAST, 2, 'h'),
+    (1, 1, Direction.SOUTHWEST, 2, 'd'),
+    (1, 1, Direction.SOUTH, 2, 'b'),
+    (1, 1, Direction.SOUTHEAST, 2, 'd'),
+    (1, 1, Direction.EAST, 3, 'e'),
+    (1, 1, Direction.NORTHWEST, 3, 'g'),
+    (1, 1, Direction.NORTH, 3, 'f'),
+    (1, 1, Direction.NORTHEAST, 3, 'e'),
+    (1, 1, Direction.WEST, 3, 'g'),
+    (1, 1, Direction.EAST, 3, 'e'),
+    (1, 1, Direction.SOUTHWEST, 3, 'g'),
+    (1, 1, Direction.SOUTH, 3, 'f'),
+    (1, 1, Direction.SOUTHEAST, 3, 'e'),
+    (1, 1, Direction.EAST, 4, 'f'),
+    # negative steps work fine
+    (1, 1, Direction.NORTHWEST, -1, 'k'),
+    (1, 1, Direction.NORTH, -1, 'j'),
+    (1, 1, Direction.NORTHEAST, -1, 'i'),
+    (1, 1, Direction.WEST, -1, 'g'),
+    (1, 1, Direction.EAST, -1, 'e'),
+    (1, 1, Direction.SOUTHWEST, -1, 'c'),
+    (1, 1, Direction.SOUTH, -1, 'b'),
+    (1, 1, Direction.SOUTHEAST, -1, 'a'),
+])
+def test_step_wrap(x, y, direction, steps, expected):
+    g = CharGrid(FOUR_BY_THREE_GRID, wrap_grid=True)
+    assert g.step((x,y), direction, steps) == expected
+
 def test_iteration():
     iterator = StringCharIterator("hello")
     result = [char for char in iterator]

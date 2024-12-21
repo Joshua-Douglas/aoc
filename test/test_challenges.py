@@ -10,6 +10,7 @@ from twenty_twentyfour.ten import search, count_paths
 from twenty_twentyfour.eleven import blink_stones, stones_after_blink, stones_count_after_blink
 from twenty_twentyfour.twelve import calc_plot_dimensions, calc_fencing_cost
 from twenty_twentyfour.thirtheen import solve_linear_system_integer_solutions, find_token_cost
+from twenty_twentyfour.fourteen import predict_botpos, read_input, quadrant_bot_count, bot_safety_factor
 
 from twenty_twentyfour.datatypes import CharGrid, Direction
 
@@ -478,4 +479,39 @@ def test_thirteen_part_one(data_dir):
     assert find_token_cost(data_dir / 'thirteen.txt') == 31589
 
 def test_thirteen_part_two(data_dir):
-    assert find_token_cost(data_dir / 'thirteen.txt', 10000000000000) == 480
+    assert find_token_cost(data_dir / 'thirteen.txt', 10000000000000) == 98080815200063
+
+def test_fourteen_input_read(data_dir):
+    pos, vel = read_input(data_dir / 'fourteen_ex.txt')
+    assert pos[0] == (0,4)
+    assert vel[0] == (3,-3)
+    assert pos[-1] == (9,5)
+    assert vel[-1] == (-3,-3)
+
+def test_fourteen_bot_prediction(data_dir):
+    pos, vel = read_input(data_dir / 'fourteen_ex.txt')
+    positions = predict_botpos(7, 11, 100, pos, vel)
+    expected_str = ('00000020010',
+'00000000000',
+'10000000000',
+'01100000000',
+'00000100000',
+'00012000000',
+'01000010000')
+    assert positions == CharGrid(expected_str)
+    assert quadrant_bot_count(positions) == (1,3,4,1)
+    assert bot_safety_factor(positions) == 12
+
+def test_fourteen_part_one(data_dir):
+    pos, vel = read_input(data_dir / 'fourteen.txt')
+    positions = predict_botpos(103, 101, 100, pos, vel)
+    assert bot_safety_factor(positions) == 231852216
+
+def test_fourteen_part_two(data_dir):
+    pos, vel = read_input(data_dir / 'fourteen.txt')
+    cur_step = -1
+    positions = ''
+    while '1111111111111111111111111111111' not in str(positions):
+        cur_step += 1
+        positions = predict_botpos(103, 101, cur_step, pos, vel)
+    assert cur_step == 8159
