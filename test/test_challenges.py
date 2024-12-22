@@ -11,6 +11,7 @@ from twenty_twentyfour.eleven import blink_stones, stones_after_blink, stones_co
 from twenty_twentyfour.twelve import calc_plot_dimensions, calc_fencing_cost
 from twenty_twentyfour.thirtheen import solve_linear_system_integer_solutions, find_token_cost
 from twenty_twentyfour.fourteen import predict_botpos, read_input, quadrant_bot_count, bot_safety_factor
+from twenty_twentyfour.fifteen import get_warehouse_input, gps_sum, warehouse_simulation_parttwo
 
 from twenty_twentyfour.datatypes import CharGrid, Direction
 
@@ -515,3 +516,74 @@ def test_fourteen_part_two(data_dir):
         cur_step += 1
         positions = predict_botpos(103, 101, cur_step, pos, vel)
     assert cur_step == 8159
+
+def test_fifteen_example(data_dir):
+    grid, instructions = get_warehouse_input(data_dir / 'fifteen_ex.txt')
+    grid = warehouse_simulation_parttwo(grid, instructions)
+    expected_grid = ('##########',
+'#.O.O.OOO#',
+'#........#',
+'#OO......#',
+'#OO@.....#',
+'#O#.....O#',
+'#O.....OO#',
+'#O.....OO#',
+'#OO....OO#',
+'##########',   
+    )
+    assert grid == CharGrid(expected_grid)
+    assert gps_sum(grid) == 10092
+
+def test_fifteen_part_one(data_dir):
+    grid, instructions = get_warehouse_input(data_dir / 'fifteen.txt')
+    grid = warehouse_simulation_parttwo(grid, instructions)
+    assert gps_sum(grid) == 1526018
+
+def test_fifteen_part_two_ex(data_dir):
+    grid, instructions = get_warehouse_input(data_dir / 'fifteen_ex.txt', double_grid=True)
+    grid = warehouse_simulation_parttwo(grid, instructions)
+    expected_grid = ('####################',
+'##[].......[].[][]##',
+'##[]...........[].##',
+'##[]........[][][]##',
+'##[]......[]....[]##',
+'##..##......[]....##',
+'##..[]............##',
+'##..@......[].[][]##',
+'##......[][]..[]..##',
+'####################')
+    assert grid == CharGrid(expected_grid)
+    assert gps_sum(grid) == 9021
+
+def test_fifteen_part_two_edge(data_dir):    
+    start_grid = ('################',
+'##[]..........##',
+'##[]##......[]##',
+'####[].@......##',
+'##..[][][]....##',
+'######.[][]...##',
+'##....[][]....##',
+'##......[]..[]##',
+'##[][]......[]##',
+'##..[][]......##',
+'################'
+    )
+    expected_grid = ('################',
+'##[]..........##',
+'##[]##......[]##',
+'####[]........##',
+'##..[].@[]....##',
+'######[].[]...##',
+'##.....[].....##',
+'##....[][]..[]##',
+'##[][]..[]..[]##',
+'##..[][]......##',
+'################'
+    )
+    grid = warehouse_simulation_parttwo(start_grid, list(('v',)))
+    assert str(grid) == str(CharGrid(expected_grid))
+
+def test_fifteen_part_two(data_dir):
+    grid, instructions = get_warehouse_input(data_dir / 'fifteen.txt', double_grid=True)
+    grid = warehouse_simulation_parttwo(grid, instructions)
+    assert gps_sum(grid) == 1550677
