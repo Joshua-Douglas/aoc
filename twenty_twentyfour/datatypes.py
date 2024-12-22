@@ -17,6 +17,9 @@ class Direction(Enum):
     SOUTH = (0, 1)
     SOUTHWEST = (-1, 1)
 
+    def __lt__(self, other):
+        return self.value < other.value
+
 class CharGrid:
     '''
     Equal width character grid, with top-left origin.

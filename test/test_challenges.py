@@ -12,6 +12,7 @@ from twenty_twentyfour.twelve import calc_plot_dimensions, calc_fencing_cost
 from twenty_twentyfour.thirtheen import solve_linear_system_integer_solutions, find_token_cost
 from twenty_twentyfour.fourteen import predict_botpos, read_input, quadrant_bot_count, bot_safety_factor
 from twenty_twentyfour.fifteen import get_warehouse_input, gps_sum, warehouse_simulation_parttwo
+from twenty_twentyfour.sixteen import lowest_score_path
 
 from twenty_twentyfour.datatypes import CharGrid, Direction
 
@@ -587,3 +588,48 @@ def test_fifteen_part_two(data_dir):
     grid, instructions = get_warehouse_input(data_dir / 'fifteen.txt', double_grid=True)
     grid = warehouse_simulation_parttwo(grid, instructions)
     assert gps_sum(grid) == 1550677
+
+def test_sixteen_example_one():
+    input_str = ('###############',
+'#.......#....E#',
+'#.#.###.#.###.#',
+'#.....#.#...#.#',
+'#.###.#####.#.#',
+'#.#.#.......#.#',
+'#.#.#####.###.#',
+'#...........#.#',
+'###.#.#####.#.#',
+'#...#.....#.#.#',
+'#.#.#.###.#.#.#',
+'#.....#...#.#.#',
+'#.###.#.#.#.#.#',
+'#S..#.....#...#',
+'###############'
+    )
+    assert lowest_score_path(input_str) == (7036, 45)
+
+def test_sixteen_example_two():
+    input_str = ('#################',
+'#...#...#...#..E#',
+'#.#.#.#.#.#.#.#.#',
+'#.#.#.#...#...#.#',
+'#.#.#.#.###.#.#.#',
+'#...#.#.#.....#.#',
+'#.#.#.#.#.#####.#',
+'#.#...#.#.#.....#',
+'#.#.#####.#.###.#',
+'#.#.#.......#...#',
+'#.#.###.#####.###',
+'#.#.#...#.....#.#',
+'#.#.#.#####.###.#',
+'#.#.#.........#.#',
+'#.#.#.#########.#',
+'#S#.............#',
+'#################'
+    )
+    assert lowest_score_path(input_str) == (11048, 64)
+
+def test_sixteen_part_one(data_dir):
+    with open(data_dir / 'sixteen.txt') as f:
+        source_str = f.readlines()
+    assert lowest_score_path(source_str) == (73404, 449)
