@@ -15,6 +15,7 @@ from twenty_twentyfour.fifteen import get_warehouse_input, gps_sum, warehouse_si
 from twenty_twentyfour.sixteen import lowest_score_path
 from twenty_twentyfour.seventeen import Program
 from twenty_twentyfour.eighteen import read_falling_bytes, bytedown_grid, path_blocking_byte
+from twenty_twentyfour.nineteen import read_towels, towels_solve, towel_counts
 
 from twenty_twentyfour.datatypes import CharGrid, Direction
 
@@ -670,3 +671,26 @@ def test_eighteen_ex_part_two(data_dir):
 
 def test_eighteen_part_two(data_dir):
     assert path_blocking_byte(data_dir / 'eighteen.txt', 71) == (45,18)    
+
+def test_nineteen_ex_part_one(data_dir):
+    available, patterns = read_towels(data_dir / 'nineteen_ex.txt')
+    result, valid_count = towels_solve(available, patterns)
+    assert valid_count == 6
+    assert result['brwrr'] == [['b', 'r', 'wr', 'r'], ['br', 'wr', 'r']]
+    assert result['bggr'] == [['b', 'g', 'g', 'r']]
+    assert result['gbbr'] == [['g', 'b', 'b', 'r'], ['g', 'b', 'br'], ['gb', 'b', 'r'], ['gb', 'br']]
+    assert result['rrbgbr'] == [['r', 'r', 'b', 'g', 'b', 'r'], ['r', 'r', 'b', 'g', 'br'], ['r', 'r', 'b', 'gb', 'r'], ['r', 'rb', 'g', 'b', 'r'], ['r', 'rb', 'g', 'br'], ['r', 'rb', 'gb', 'r']]
+    assert result['ubwu'] == []
+    assert result['bwurrg'] == [['bwu', 'r', 'r', 'g']]
+    assert result['brgr'] == [['b', 'r', 'g', 'r'], ['br', 'g', 'r']]
+    assert result['bbrgwb'] == []
+
+def test_nineteen_part_one(data_dir):
+    available, patterns = read_towels(data_dir / 'nineteen.txt')
+    pos = [towel_counts(available, pattern) for pattern in patterns]
+    assert sum(map(bool, pos)) == 298
+
+def test_nineteen_part_two(data_dir):
+    available, patterns = read_towels(data_dir / 'nineteen.txt')
+    pos = [towel_counts(available, pattern) for pattern in patterns]
+    assert sum(pos) == 572248688842069
