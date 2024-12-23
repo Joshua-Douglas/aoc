@@ -14,6 +14,7 @@ from twenty_twentyfour.fourteen import predict_botpos, read_input, quadrant_bot_
 from twenty_twentyfour.fifteen import get_warehouse_input, gps_sum, warehouse_simulation_parttwo
 from twenty_twentyfour.sixteen import lowest_score_path
 from twenty_twentyfour.seventeen import Program
+from twenty_twentyfour.eighteen import read_falling_bytes, bytedown_grid, path_blocking_byte
 
 from twenty_twentyfour.datatypes import CharGrid, Direction
 
@@ -650,3 +651,22 @@ def test_seventeen_part_one():
 def test_seventeen_part_two():
     program = Program(61156655, 0, 0, (2,4,1,5,7,5,4,3,1,6,0,3,5,5,3,0))
     assert program.solve_part_two() == 105734774294938
+
+from twenty_twentyfour.eighteen import lowest_score_path as lowest_score_path18
+def test_eighteen_example(data_dir):
+    byte_coords = read_falling_bytes(data_dir / 'eighteen_ex.txt', 12)
+    grid = bytedown_grid(7, byte_coords)
+    lowest_steps, _ = lowest_score_path18(grid)
+    assert lowest_steps == 22
+
+def test_eighteen_part_one(data_dir):
+    byte_coords = read_falling_bytes(data_dir / 'eighteen.txt', 1024)
+    grid = bytedown_grid(71, byte_coords)
+    lowest_steps, _ = lowest_score_path18(grid)
+    assert lowest_steps == 316
+
+def test_eighteen_ex_part_two(data_dir):
+    assert path_blocking_byte(data_dir / 'eighteen_ex.txt', 7) == (6,1)
+
+def test_eighteen_part_two(data_dir):
+    assert path_blocking_byte(data_dir / 'eighteen.txt', 71) == (45,18)    
