@@ -13,6 +13,7 @@ from twenty_twentyfour.thirtheen import solve_linear_system_integer_solutions, f
 from twenty_twentyfour.fourteen import predict_botpos, read_input, quadrant_bot_count, bot_safety_factor
 from twenty_twentyfour.fifteen import get_warehouse_input, gps_sum, warehouse_simulation_parttwo
 from twenty_twentyfour.sixteen import lowest_score_path
+from twenty_twentyfour.seventeen import Program
 
 from twenty_twentyfour.datatypes import CharGrid, Direction
 
@@ -633,3 +634,19 @@ def test_sixteen_part_one(data_dir):
     with open(data_dir / 'sixteen.txt') as f:
         source_str = f.readlines()
     assert lowest_score_path(source_str) == (73404, 449)
+
+def test_seventeen_ex_program():
+    program = Program(729, 0, 0, (0,1,5,4,3,0))
+    assert program.run() == '4,6,3,5,6,3,5,2,1,0'
+
+def test_seventeen_ex_copy_program():
+    program = Program(117440, 0, 0, (0,3,5,4,3,0))
+    assert program.run() == '0,3,5,4,3,0'
+
+def test_seventeen_part_one():
+    program = Program(61156655, 0, 0, (2,4,1,5,7,5,4,3,1,6,0,3,5,5,3,0))
+    assert program.run() == '7,3,5,7,5,7,4,3,0'
+
+def test_seventeen_part_two():
+    program = Program(61156655, 0, 0, (2,4,1,5,7,5,4,3,1,6,0,3,5,5,3,0))
+    assert program.solve_part_two() == 105734774294938
