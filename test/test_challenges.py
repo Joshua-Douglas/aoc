@@ -1,5 +1,9 @@
 import pytest
 
+from twenty_twentyfour.one import list_distance, similarity_score
+from twenty_twentyfour.two import safe_report_count
+from twenty_twentyfour.three import extract_mul_command_input, decorrupt_memory, decorrupt_do_memory
+
 from twenty_twentyfour.four import count_word_in_grid, count_x_mas
 from twenty_twentyfour.five import valid_updates, invalid_updates
 from twenty_twentyfour.six import count_guard_positions, guard_is_in_loop, count_guard_loops
@@ -22,6 +26,38 @@ from twenty_twentyfour.twentytwo import next_secret, banana_haggling
 from twenty_twentyfour.twentythree import LAN_password, find_largest_clique, build_graph, find_triangles, count_t_triangles
 
 from twenty_twentyfour.datatypes import CharGrid, Direction
+
+def test_one(data_dir):
+    assert list_distance(data_dir / "one.txt") == 3569916
+    assert similarity_score(data_dir / "one.txt") == 26407426
+
+def test_two(data_dir):
+    assert safe_report_count(data_dir / "two.txt", enable_dampener=False) == 606
+    assert safe_report_count(data_dir / "two.txt", enable_dampener=True) == 644
+
+@pytest.mark.parametrize("input_string, expected_output, expected_sum", [
+    ('asdf', [], 0),
+    ('mul()', [], 0),
+    ('mul(1,1)', [(1, 1)], 1),
+    ('mul(2,1)', [(2, 1)], 2),
+    ('mul(1,2)', [(1, 2)], 2),
+    ('mul(1, 2)', [], 0),
+    ('Mul(1,1)', [(1, 1)], 1),
+    ('muL(1,1)', [(1, 1)], 1),
+    ('mul(1,2 )', [], 0),
+    (' mul(1,1)', [(1, 1)], 1),
+    ('mul(1,1) mul(2,3) MUL(4,5)', [(1, 1), (2, 3), (4, 5)], 27),
+    ('xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))', [(2, 4), (5, 5), (11, 8), (8, 5)], 161),
+])
+def test_three_commands(input_string, expected_output, expected_sum):
+    result = extract_mul_command_input(input_string)
+    result_sum = sum(a * b for (a, b) in result)
+    assert result == expected_output
+    assert result_sum == expected_sum
+
+def test_three(data_dir):
+    assert decorrupt_memory(data_dir / 'three.txt') == 165225049
+    assert decorrupt_do_memory(data_dir / 'three.txt') == 108830766    
 
 def test_four_first_example():
     example = ('MMMSXXMASM',

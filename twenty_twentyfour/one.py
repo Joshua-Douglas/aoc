@@ -1,5 +1,4 @@
 import heapq
-from dataclasses import dataclass
 
 l1 = sorted([3, 4, 2, 1, 3, 3])
 l2 = sorted([4, 3, 5, 3, 9, 3])
@@ -45,9 +44,3 @@ def similarity_score(filepath: str):
         result += location_id * freq
 
     return result
-
-if __name__ == '__main__':
-    # 3569916
-    print(list_distance("one.txt"))
-    # 26407426
-    print(similarity_score("one.txt"))

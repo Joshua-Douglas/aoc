@@ -49,9 +49,3 @@ def safe_report_count(filepath: str, enable_dampener: bool) -> int:
                         result += 1
                         break
     return result
-
-if __name__ == '__main__':
-    # 606
-    print(safe_report_count("two.txt", enable_dampener=False))
-    # 644 
-    print(safe_report_count("two.txt", enable_dampener=True))
