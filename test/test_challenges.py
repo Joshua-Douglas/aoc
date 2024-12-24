@@ -17,6 +17,7 @@ from twenty_twentyfour.seventeen import Program
 from twenty_twentyfour.eighteen import read_falling_bytes, bytedown_grid, path_blocking_byte
 from twenty_twentyfour.nineteen import read_towels, towels_solve, towel_counts
 from twenty_twentyfour.twenty import get_path, valid_cheats
+from twenty_twentyfour.twentyone import code_complexity
 
 from twenty_twentyfour.datatypes import CharGrid, Direction
 
@@ -701,3 +702,16 @@ def test_twenty(data_dir):
     part_two = sum(saved >= 100 for saved in valid_cheats(track, 20))
     assert part_one == 1387
     assert part_two == 1015092
+
+def test_twentyone():
+    sequences = (
+        '973A',
+        '836A',
+        '780A',
+        '985A',
+        '413A'
+    )
+    p1 = code_complexity(sequences, 2)
+    p2 = code_complexity(sequences, 25)
+    assert p1 == 270084
+    assert p2 == 329431019997766
