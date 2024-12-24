@@ -18,6 +18,7 @@ from twenty_twentyfour.eighteen import read_falling_bytes, bytedown_grid, path_b
 from twenty_twentyfour.nineteen import read_towels, towels_solve, towel_counts
 from twenty_twentyfour.twenty import get_path, valid_cheats
 from twenty_twentyfour.twentyone import code_complexity
+from twenty_twentyfour.twentytwo import next_secret, banana_haggling
 
 from twenty_twentyfour.datatypes import CharGrid, Direction
 
@@ -715,3 +716,37 @@ def test_twentyone():
     p2 = code_complexity(sequences, 25)
     assert p1 == 270084
     assert p2 == 329431019997766
+
+def test_twentytwo_secret():
+    SECRETS = (
+        15887950,
+        16495136,
+        527345,
+        704524,
+        1553684,
+        12683156,
+        11100544,
+        12249484,
+        7753432,
+        5908254
+    )
+    prev = 123
+    for secret in SECRETS:
+        next = next_secret(prev)
+        assert next == secret
+        prev = next
+
+def test_twentytwo_example():
+    assert banana_haggling((1, 10, 100, 2024), 2000) == (37327623, 24)
+
+def test_twentytwo_example_two():
+    assert banana_haggling((1, 2, 3, 2024), 2000) == (37990510, 23)
+
+def test_twentytwo(data_dir):
+    with open(data_dir / 'twentytwo.txt') as f:
+        secrets = f.readlines()
+    secrets = tuple(map(int, secrets))
+    
+    sum, bananas = banana_haggling(secrets, 2000)
+    assert sum == 17965282217
+    assert bananas == 2152
