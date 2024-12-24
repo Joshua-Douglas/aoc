@@ -24,7 +24,7 @@ from twenty_twentyfour.twenty import get_path, valid_cheats
 from twenty_twentyfour.twentyone import code_complexity
 from twenty_twentyfour.twentytwo import next_secret, banana_haggling
 from twenty_twentyfour.twentythree import LAN_password, build_graph, find_triangles, count_t_triangles
-from twenty_twentyfour.twentyfour import compute_number
+from twenty_twentyfour.twentyfour import compute_number, gates_to_mermaid, parse_input, simulate_circuit, find_swaps_brute, gate_output
 
 from twenty_twentyfour.datatypes import CharGrid, Direction
 
@@ -812,3 +812,31 @@ def test_twentyfour_part_one(data_dir):
     with open(data_dir / "twentyfour.txt") as f:
         inputs = f.read()
     assert compute_number(inputs) == 65740327379952
+
+def test_twentyfour_part_two(data_dir):
+    with open(data_dir / "twentyfour.txt") as f:
+        inputs = f.read()
+    assert compute_number(inputs) == 65740327379952
+
+def test_twentyfour_part_two_ex(data_dir):
+    def example_predicate(initial_values, swapped_gates):
+        wire_values = simulate_circuit(initial_values, swapped_gates)
+        # Suppose we have a function z_gate_output that extracts the integer value of z wires
+        return gate_output(wire_values, 'z') == 40
+
+    with open(data_dir / "twentyfour_ex2.txt") as f:
+        inputs = f.read()
+    assert compute_number(inputs) == 9 # solution wrong at start
+    initial_values, gates = parse_input(inputs)
+    swaps = find_swaps_brute(initial_values, gates, example_predicate)
+    assert swaps == 'x00,x01,x02,x05,y00,y01,y02,y05,z00,z01,z02,z05'
+
+def test_twentyfour_part_two(data_dir):
+    with open(data_dir / "twentyfour.txt") as f:
+        inputs = f.read()
+    inputs, gates = parse_input(inputs)
+    # This brute force approach in ex test works well on small inputs but breaks down
+    # on full input since this requires ~700M swaps. To solve I plotted
+    # the half-adder circuit and visually checked for incorrect circuits
+    with open('adder.mmd', 'w') as f:
+        f.write(gates_to_mermaid(gates))
