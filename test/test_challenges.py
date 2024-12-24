@@ -23,7 +23,8 @@ from twenty_twentyfour.nineteen import read_towels, towels_solve, towel_counts
 from twenty_twentyfour.twenty import get_path, valid_cheats
 from twenty_twentyfour.twentyone import code_complexity
 from twenty_twentyfour.twentytwo import next_secret, banana_haggling
-from twenty_twentyfour.twentythree import LAN_password, find_largest_clique, build_graph, find_triangles, count_t_triangles
+from twenty_twentyfour.twentythree import LAN_password, build_graph, find_triangles, count_t_triangles
+from twenty_twentyfour.twentyfour import compute_number
 
 from twenty_twentyfour.datatypes import CharGrid, Direction
 
@@ -801,3 +802,13 @@ def test_twenty_three_part_two(data_dir):
         connections = [line.strip() for line in f]
     password = LAN_password(connections)
     print("Password to get into the LAN party:", password)
+
+def test_twentyfour_example(data_dir):
+    with open(data_dir / "twentyfour_ex.txt") as f:
+        inputs = f.read()
+    assert compute_number(inputs) == 2024
+
+def test_twentyfour_part_one(data_dir):
+    with open(data_dir / "twentyfour.txt") as f:
+        inputs = f.read()
+    assert compute_number(inputs) == 65740327379952
