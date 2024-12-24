@@ -19,6 +19,7 @@ from twenty_twentyfour.nineteen import read_towels, towels_solve, towel_counts
 from twenty_twentyfour.twenty import get_path, valid_cheats
 from twenty_twentyfour.twentyone import code_complexity
 from twenty_twentyfour.twentytwo import next_secret, banana_haggling
+from twenty_twentyfour.twentythree import LAN_password, find_largest_clique, build_graph, find_triangles, count_t_triangles
 
 from twenty_twentyfour.datatypes import CharGrid, Direction
 
@@ -750,3 +751,17 @@ def test_twentytwo(data_dir):
     sum, bananas = banana_haggling(secrets, 2000)
     assert sum == 17965282217
     assert bananas == 2152
+
+def test_twenty_three(data_dir):
+    with open(data_dir / 'twentythree.txt') as f:
+        connections = [line.strip() for line in f]
+    
+    graph = build_graph(connections)
+    triangles = find_triangles(graph)
+    assert count_t_triangles(triangles) == 1302
+
+def test_twenty_three_part_two(data_dir):
+    with open(data_dir / 'twentythree.txt') as f:
+        connections = [line.strip() for line in f]
+    password = LAN_password(connections)
+    print("Password to get into the LAN party:", password)
