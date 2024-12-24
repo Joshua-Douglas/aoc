@@ -16,6 +16,7 @@ from twenty_twentyfour.sixteen import lowest_score_path
 from twenty_twentyfour.seventeen import Program
 from twenty_twentyfour.eighteen import read_falling_bytes, bytedown_grid, path_blocking_byte
 from twenty_twentyfour.nineteen import read_towels, towels_solve, towel_counts
+from twenty_twentyfour.twenty import get_path, valid_cheats
 
 from twenty_twentyfour.datatypes import CharGrid, Direction
 
@@ -448,13 +449,9 @@ def test_twelve_complex_examples():
         'AAAAAA'
     )
     g = CharGrid(source_str)
-    second_g = CharGrid(second_source)
     assert calc_plot_dimensions(g, (0,0)) == (17, 36, 12)
     assert calc_plot_dimensions(g, (1,1)) == (4, 10, 4)
     assert calc_plot_dimensions(g, (1,3)) == (4, 10, 4)
-    #assert calc_plot_dimensions(second_g, (0,0)) == (17, 36, 12)
-    #assert calc_plot_dimensions(second_g, (1,1)) == (4, 10, 4)
-    #assert calc_plot_dimensions(second_g, (1,3)) == (4, 10, 4)
     assert calc_fencing_cost(source_str, True) == 236
     assert calc_fencing_cost(second_source, True) == 368
 
@@ -694,3 +691,13 @@ def test_nineteen_part_two(data_dir):
     available, patterns = read_towels(data_dir / 'nineteen.txt')
     pos = [towel_counts(available, pattern) for pattern in patterns]
     assert sum(pos) == 572248688842069
+
+def test_twenty(data_dir):
+    with open(data_dir / 'twenty.txt') as f:
+        source = f.readlines()
+    grid = CharGrid(source)
+    track = get_path(grid)
+    part_one = sum(saved >= 100 for saved in valid_cheats(track, 2))
+    part_two = sum(saved >= 100 for saved in valid_cheats(track, 20))
+    assert part_one == 1387
+    assert part_two == 1015092
