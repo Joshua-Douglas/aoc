@@ -25,6 +25,7 @@ from twenty_twentyfour.twentyone import code_complexity
 from twenty_twentyfour.twentytwo import next_secret, banana_haggling
 from twenty_twentyfour.twentythree import LAN_password, build_graph, find_triangles, count_t_triangles
 from twenty_twentyfour.twentyfour import compute_number, gates_to_mermaid, parse_input, simulate_circuit, find_swaps_brute, gate_output
+from twenty_twentyfour.twentyfive import pick_locks
 
 from twenty_twentyfour.datatypes import CharGrid, Direction
 
@@ -840,3 +841,16 @@ def test_twentyfour_part_two(data_dir):
     # the half-adder circuit and visually checked for incorrect circuits
     with open('adder.mmd', 'w') as f:
         f.write(gates_to_mermaid(gates))
+
+def test_twentyfive_part_one_ex(data_dir):
+    with open(data_dir / 'twentyfive_ex.txt') as f:
+        puzzle_lines = f.readlines()
+    answer = pick_locks(puzzle_lines)
+    assert answer == 3
+    
+def test_twentyfive_part_one(data_dir):
+    with open(data_dir / 'twentyfive.txt') as f:
+        puzzle_lines = f.readlines()
+    answer = pick_locks(puzzle_lines)
+    assert answer == 2950
+    
